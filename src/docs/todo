@@ -1,0 +1,172 @@
+# TODO File - Projeto Gerador de Imagens de ACEs
+# Data de Atualização: 2024-11-18
+
+## Funções necessárias
+- [x] Aplicar a regra
+- [x] Transformar um estado final em imagem
+- [ ] Gerar imagem para todas as regras
+- [ ] Aplicar a composição das regras (uma e a outra, depois print)
+- [ ] Gerar imagem para todas as composições
+
+## Prioridade Alta
+- [ ] Arquivo de regras (funções)
+- [x] Arquivo de regras (dict)
+- [x] Separar as regras por classe
+- [x] Gerar estado inicial aleatório
+- [ ] Refatorar o código do automaton.py para incluir suporte a vizinhanças maiores.
+- [ ] Adicionar validação ao modo ZIP no CellularAutomaton.
+
+## Prioridade Média
+- [ ] Criar documentação para a API de geração de imagens.
+- [ ] Otimizar a lógica de evolução do automaton para trabalhar com Numpy puro.
+
+## Melhorias Futuras
+- [ ] Adicionar suporte para visualização em tempo real (matplotlib).
+- [ ] Suporte para autômatos celulares bidimensionais.
+- [ ] Sistema de cache para estados intermediários grandes.
+    
+# Sobre o cache:
+
+### **1. Salvar o Cache em Outro Arquivo**
+
+Sim, você pode salvar o cache em um arquivo externo, como um arquivo **JSON**, **pickle**, ou até mesmo um **arquivo de texto**, dependendo do formato desejado.
+
+#### **Exemplo Usando `pickle`**
+```python
+import pickle
+
+# Salvar o cache em um arquivo
+with open('cache.pkl', 'wb') as f:
+    pickle.dump(self.cache, f)
+
+# Carregar o cache de um arquivo
+with open('cache.pkl', 'rb') as f:
+    self.cache = pickle.load(f)
+```
+
+- **`pickle`** é útil para armazenar objetos Python complexos, como dicionários com arrays.
+- O arquivo `cache.pkl` armazenará o cache e poderá ser reutilizado em execuções futuras.
+
+---
+
+#### **Exemplo Usando `json`**
+Se o cache for compatível com JSON (ou seja, se as chaves e valores forem tipos simples, como strings ou números), você pode usar:
+
+```python
+import json
+
+# Salvar o cache em um arquivo JSON
+with open('cache.json', 'w') as f:
+    json.dump(self.cache, f)
+
+# Carregar o cache de um arquivo JSON
+with open('cache.json', 'r') as f:
+    self.cache = json.load(f)
+```
+
+- **Limitação do JSON**: As chaves do dicionário precisam ser strings. Se você estiver usando `tuple` como chave, precisará convertê-las para strings antes de salvar.
+
+---
+
+### **2. Dicionário com Duas Chaves**
+
+Embora os dicionários do Python não suportem múltiplas chaves diretamente, você pode simular isso de algumas maneiras.
+
+#### **Método 1: Usar uma `tuple` como Chave**
+Você pode combinar as duas chaves em uma `tuple`, que será usada como uma única chave no dicionário.
+
+```python
+# Criando um dicionário com tuplas como chaves
+multi_key_dict = {
+    (1, 'A'): "Valor 1",
+    (2, 'B'): "Valor 2",
+}
+
+# Acessando valores
+print(multi_key_dict[(1, 'A')])  # Saída: Valor 1
+
+# Adicionando novos valores
+multi_key_dict[(3, 'C')] = "Valor 3"
+print(multi_key_dict)
+```
+
+---
+
+#### **Método 2: Usar um Dicionário Aninhado**
+Você pode usar um dicionário aninhado, onde a primeira chave aponta para outro dicionário.
+
+```python
+# Criando um dicionário aninhado
+nested_dict = {
+    1: {'A': "Valor 1", 'B': "Valor 2"},
+    2: {'A': "Valor 3", 'B': "Valor 4"},
+}
+
+# Acessando valores
+print(nested_dict[1]['A'])  # Saída: Valor 1
+
+# Adicionando novos valores
+nested_dict[3] = {'C': "Valor 5"}
+print(nested_dict)
+```
+
+---
+
+### **Qual Abordagem Usar?**
+
+1. **`tuple` como chave**:
+   - Use quando as combinações de chaves forem estáticas ou se você precisar de acesso rápido.
+   - Exemplo: Cache onde as duas chaves são o estado anterior e o índice do passo.
+
+2. **Dicionário aninhado**:
+   - Use quando as chaves aninhadas forem organizadas hierarquicamente ou se for mais intuitivo para o seu caso.
+   - Exemplo: Agrupar dados por categoria e subcategoria.
+
+---
+
+### **Exemplo Prático no Contexto do Cache**
+
+Aqui está como implementar um cache com duas chaves (estado atual e passo):
+
+#### Usando `tuple` como chave:
+```python
+self.cache = {}
+
+# Adicionar ao cache
+current_state = tuple(self.grid[step])
+step_index = step
+self.cache[(current_state, step_index)] = next_state
+
+# Acessar do cache
+if (current_state, step_index) in self.cache:
+    next_state = self.cache[(current_state, step_index)]
+```
+
+---
+
+#### Usando dicionário aninhado:
+```python
+self.cache = {}
+
+# Adicionar ao cache
+current_state = tuple(self.grid[step])
+if current_state not in self.cache:
+    self.cache[current_state] = {}
+self.cache[current_state][step] = next_state
+
+# Acessar do cache
+if current_state in self.cache and step in self.cache[current_state]:
+    next_state = self.cache[current_state][step]
+```
+
+---
+
+Se precisar de mais detalhes sobre como salvar, organizar ou acessar o cache, é só perguntar! 🚀
+
+
+
+
+
+# Legenda:
+# - [ ] Pendentes
+# - [x] Concluídos
