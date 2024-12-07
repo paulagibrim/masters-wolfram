@@ -7,7 +7,7 @@ import numpy as np
 import os
 
 class CellularAutomaton:
-    def __init__(self, size, steps, rule, rule2=None, begin_type='random', zip_mode=False):
+    def __init__(self, size: int, steps: int, rule: int, rule2: int=None, begin_type: str='random', zip_mode: bool=False):
         """
         Constructor for the CellularAutomaton class.
 
@@ -20,7 +20,7 @@ class CellularAutomaton:
         """
 
         self.__size = size
-        self.__steps = steps
+        self.__steps = steps + 1
         self.__zip_mode = None
         self.__rule = None
         self.__rule2 = None
@@ -162,16 +162,38 @@ class CellularAutomaton:
     #             else:
     #                 self.__grid[step+1, cell] = self.__rule2[self.__rule[tuple(neighbors)]]               # Composition of rules
     
-    def __evolve(self):
-        for step in range(self.__steps - 1):
-            left = np.roll(self.__grid[step], 1)  # Shift left
-            right = np.roll(self.__grid[step], -1)  # Shift right
-            neighbors = np.stack([left, self.__grid[step], right], axis=1)
-            if self.__rule2 is None:
-                self.__grid[step + 1] = [self.__rule.get_rule_dict()[tuple(n)] for n in neighbors]
-            else:
-                self.__grid[step + 1] = [self.__rule2.get_rule_dict()[self.__rule.get_rule_dict()[tuple(n)]] for n in neighbors]
+    # def __evolve(self):
+    #     for cell in range(self.__size):
+    #         left = np.roll(self.__grid[cell], 1)  # Shift left
+    #         right = np.roll(self.__grid[cell], -1)  # Shift right
+    #         neighbors = np.stack([left, self.__grid[cell], right], axis=1)
+    #         if self.__rule2 is None:
+    #             self.__grid[cell + 1] = [self.__rule.get_rule_dict()[tuple(n)] for n in neighbors]
+    #         else:
+    #             self.__grid[cell + 1] = [self.__rule2.get_rule_dict()[self.__rule.get_rule_dict()[tuple(n)]] for n in neighbors]
 
+
+    def __evolve(self, step):
+        """
+        Calculate the next state of the automaton for a given step.
+        :param step: int, the current step in the simulation.
+        """
+        for cell in range(self.__size):
+            # Definir os vizinhos usando condições de contorno circulares
+            left = self.__grid[step, (cell - 1) % self.__size]
+            center = self.__grid[step, cell]
+            right = self.__grid[step, (cell + 1) % self.__size]
+
+            # Define os vizinhos como uma tupla
+            neighbors = (left, center, right)
+
+            # Aplica a regra correspondente
+            if self.__rule2 is None:
+                self.__grid[step + 1, cell] = self.__rule.get_rule_dict()[neighbors]
+            else:
+                # Alterna entre as regras no modo "zip"
+                rule_to_use = self.__rule if step % 2 == 0 else self.__rule2
+                self.__grid[step + 1, cell] = rule_to_use.get_rule_dict()[neighbors]
 
     def __get_grid(self):
         """
@@ -183,8 +205,8 @@ class CellularAutomaton:
         """
         Run the simulation.
         """
-        for i in range(self.__steps - 1):
-            self.__evolve()
+        for step in range(self.__steps - 1):
+            self.__evolve(step)
 
     # def test(self, scale=1):
     #     """
