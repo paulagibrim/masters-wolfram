@@ -1,5 +1,5 @@
 from rules import rules
-from classes import HOMOGENIOUS, PERIODIC, CHAOTIC, COMPLEX
+from classes import HOMOGENEOUS, PERIODIC, CHAOTIC, COMPLEX
 from PIL import Image
 
 import numpy as np
@@ -37,8 +37,6 @@ class CellularAutomaton:
         
         ## GRID INITIALIZATION ##
         self.__grid = self.__initialize_grid()
-
-
 
     #### VALIDATION METHODS ####
     @staticmethod 
@@ -144,11 +142,6 @@ class CellularAutomaton:
         self.__rule2 = self.__get_rule_obj(rule2) if rule2 is not None else None
 
     def __evolve(self, step):
-        """
-        Calculate the next state of the automaton for a given step.
-        :param step: int, the current step in the simulation.
-        """
-        next = []
         for cell in range(self.__size):
             left = self.__grid[step, (cell - 1) % self.__size]
             center = self.__grid[step, cell]
@@ -156,39 +149,7 @@ class CellularAutomaton:
 
             neighbors = (left, center, right)
 
-            next.append(self.__rule.get_rule_dict()[neighbors])
-
-        # #DEBUG
-        # print (next)
-
-        self.__grid[step + 1] = next
-
-    # def __evolve(self, step):
-    #     """
-    #     Calculate the next state of the automaton for a given step.
-    #     :param step: int, the current step in the simulation.
-    #     """
-    #     for cell in range(self.__size):
-    #
-    #         # Definir os vizinhos usando condições de contorno circulares
-    #         left = self.__grid[step, (cell - 1) % self.__size]
-    #         center = self.__grid[step, cell]
-    #         right = self.__grid[step, (cell + 1) % self.__size]
-    #
-    #         # Define os vizinhos como uma tupla
-    #         neighbors = (left, center, right)
-    #
-    #         # Aplica a regra correspondente
-    #         if self.__rule2 is None:
-    #             self.__grid[step + 1, cell] = self.__rule.get_rule_dict()[neighbors]
-    #             #DEBUG
-    #             # print(self.__rule.get_rule_dict()[neighbors])
-    #         else:
-    #             # Alterna entre as regras no modo "zip"
-    #             rule_to_use = self.__rule if step % 2 == 0 else self.__rule2
-    #             self.__grid[step + 1, cell] = rule_to_use.get_rule_dict()[neighbors]
-
-
+            self.__grid[step + 1, cell] = self.__rule.get_rule_dict()[neighbors]
 
     def get_grid(self):
         """
@@ -202,17 +163,6 @@ class CellularAutomaton:
         """
         for step in range(self.__steps - 1):
             self.__evolve(step)
-
-    # def test(self, scale=1):
-    #     """
-    #     Test image generation.
-    #     """
-    #     self.__validate_scale(scale)
-    #     img_arr = (~self.__grid).astype(np.uint8) * 255  # Converte True/False para 0/255
-    #     img_arr = np.kron(img_arr, np.ones((scale, scale), dtype=np.uint8))  # Escala
-    #     return Image.fromarray(img_arr, mode='L')  # Escala de cinza
-
-    ### INITIALIZATION METHODS ###
 
     def __initialize_grid(self):
         """
@@ -304,7 +254,7 @@ class CellularAutomaton:
         self.__validate_path(self.__label)
 
         if self.__rule2 is not None:
-            if  self.get_class(self.__rule.get_number()).get_id() > self.get_class(self.__rule2.get_number()).get_id():
+            if  self.__get_class(self.__rule.get_number()).get_id() > self.__get_class(self.__rule2.get_number()).get_id():
                 self.__label += self.__get_class(self.__rule2.get_number()).get_label()
                 self.__label += ' + ' + self.__get_class(self.__rule.get_number()) + '/'
                 

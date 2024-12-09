@@ -33,7 +33,7 @@ class Class:
     def get_rules(self):
         return self.__rules
 
-
+    # @classmethod
     def __set_rules(self):
             self.validate_id()
             if self.__id == 1:
@@ -61,7 +61,7 @@ class Class:
                 self.__rules = [41, 54, 97, 106, 107, 110, 120, 121, 124, 137, 147, 169, 193, 225]
 
 
-HOMOGENIOUS = Class(1, 'I_Homogenious')
+HOMOGENEOUS = Class(1, 'I_Homogeneous')
 PERIODIC = Class(2, 'II_Periodic')
 CHAOTIC = Class(3, 'III_Chaotic')
 COMPLEX = Class(4, 'IV_Complex')
