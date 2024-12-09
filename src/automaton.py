@@ -234,8 +234,8 @@ class CellularAutomaton:
         """
         Return the class of the cellular automaton.
         """
-        if rule in HOMOGENIOUS.get_rules():
-            return HOMOGENIOUS
+        if rule in HOMOGENEOUS.get_rules():
+            return HOMOGENEOUS
         elif rule in PERIODIC.get_rules():
             return PERIODIC
         elif rule in CHAOTIC.get_rules():

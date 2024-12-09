@@ -2,10 +2,10 @@ class Rule:
     def __init__(self, number):
         self.__number = number
         self.__label = self.__set_label()
-        self.__rule_dict = self.__generate_rule_dict(number)
+        self.__rule_dict = self.__set_rule_dict(number)
 
     @staticmethod
-    def __generate_rule_dict(rule_number):
+    def __set_rule_dict(rule_number):
         """
         Generate the dictionary for a given rule number in Wolfram's 1D automata.
         :param rule_number: Integer (0-255), the rule ID.
