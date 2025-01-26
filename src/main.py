@@ -1,8 +1,10 @@
 import simulation as sim
-import automaton as at
+import simulation_type as stype
 
-ca = at.CellularAutomaton(100, 200, rule=110)
+TIMES_TO_RUN = 1
 
-simulate = sim.Simulation(ca, scale=10)
 
-simulate.run(save=True)
+sim_type = stype.SimulationType('complete', execs=TIMES_TO_RUN)
+simulate = sim.Simulation(sim_type, scale=10, size=100, steps=200)
+simulate.run(debug=True)
+    
