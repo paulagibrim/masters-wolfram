@@ -28,6 +28,7 @@ class CellularAutomaton:
         self.__label = ''
         self.__index = index
         self.__previous_execs = None
+        self.calculate_previous_execs()
 
         ## RULE INITIALIZATION ##
         self.__set_rules(rule, rule2)
@@ -357,7 +358,7 @@ class CellularAutomaton:
         else:
             self.__label += 'single/'
             self.__label += self.__get_class(self.__rule.get_number()).get_label() + '/'
-            self.__label += self.__rule.get_label() + '.png'
+            self.__label += (self.__rule.get_label() + '_' + str(self.__index) + '.png')
 
 
     def calculate_previous_execs(self):
@@ -369,3 +370,17 @@ class CellularAutomaton:
             1 for item in os.listdir('../results')
             if os.path.isdir(os.path.join('../results', item)) and 'exec' in item
         )
+
+    def set_previous_execs(self, previous_execs):
+        """
+        Set the number of previous executions
+        """
+
+        self.__previous_execs = previous_execs
+
+    def get_previous_execs(self):
+        """
+        Return the number of previous executions
+        """
+
+        return self.__previous_execs

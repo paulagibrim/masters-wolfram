@@ -54,7 +54,7 @@ class Simulation:
         self.__validate_image_output(show, save, debug)
 
         self.__ca = CellularAutomaton(self.__size, self.__steps, rule=0, rule2=None, begin_type='fixed')
-        self.__ca.calculate_previous_execs()
+        # self.__ca.calculate_previous_execs()
 
         # Write some debug information on the console
         self.__sim_type.info(debug=debug)
@@ -65,21 +65,24 @@ class Simulation:
         for exec in range(execs):
             if debug:
                 print(paint('yellow', '========== DEBUG INFO =========='))
-                print(paint('yellow', '[INFO] Executing simulation' + str(exec + 1) + ' of ' + str(execs)))
+                print(paint('yellow', '[INFO] Executing simulation ' + str(exec + 1) + ' of ' + str(execs)))
                 print(paint('yellow', '==============================='))
 
             if self.__sim_type.name == 'single':
+                # @FIXME: O path que a imagem é salva não está bom - a organização de pastas fica feia - podre
                 # Get the rule to be simulated
                 rule = self.__sim_type.get_rule()
 
                 # Run the simulation
-                self.__ca.reset(rule=rule, rule2=None, begin_type=begin_type)
+                self.__ca.reset(rule=rule, rule2=None, begin_type=begin_type, index=exec)
                 self.__ca.run()
                 self.__handle_image_output(show, save, debug)
+                prev = self.__ca.get_previous_execs()
+                self.__ca.set_previous_execs(prev-1)
 
             elif self.__sim_type.name == 'all':
                 for i in range(256):
-                    self.__ca.reset(rule=i, begin_type='fixed')
+                    self.__ca.reset(rule=i, begin_type='fixed', index=exec)
                     self.__ca.run()
                     self.__handle_image_output(show, save, debug)
 
