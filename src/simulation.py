@@ -1,6 +1,7 @@
 import os
 from automaton import CellularAutomaton
 from simulation_type import SimulationType
+from classes import HOMOGENIOUS, PERIODIC, CHAOTIC, COMPLEX
 
 class Simulation:
     def __init__(self, sim_type:SimulationType, scale: int = 4, size:int = 100, steps: int = 200):
@@ -13,7 +14,7 @@ class Simulation:
         #self.__rule = rule # Rule to be simulated, if sim_type is 'single'
 
     @staticmethod
-    def __validate_sim_type(self, sim_type):
+    def __validate_sim_type(sim_type):
         """Validate the simulation type"""
         if not isinstance(sim_type, SimulationType):
             raise ValueError(
@@ -25,7 +26,7 @@ class Simulation:
 
 
     @staticmethod
-    def __validate_image_output(self, show: bool, save: bool, debug: bool):
+    def __validate_image_output(show: bool, save: bool, debug: bool):
         """Validate the show and save parameters"""
         if not isinstance(show, bool) or not isinstance(save, bool) or not isinstance(debug, bool):
             raise ValueError(
@@ -51,6 +52,8 @@ class Simulation:
         """Run the simulation"""
         self.__validate_image_output(show, save, debug)
 
+        # @FIXME: Será que o self.__ca deveria ser instanciado aqui?
+
         if self.__sim_type.name == 'single':
             _, rule = self.__sim_type.info(debug=debug)
             self.__ca = CellularAutomaton(self.__size, self.__steps, rule=rule, begin_type=begin_type)
@@ -58,12 +61,13 @@ class Simulation:
             self.__handle_image_output(show, save, debug)
         
         elif self.__sim_type.name == 'all':
+            self.__ca = CellularAutomaton(self.__size, self.__steps, rule=0, begin_type=begin_type)
+            _ = self.__sim_type.info(debug=debug)
             for i in range(256):
-                _ = self.__sim_type.info(debug=debug)
-                self.__ca = CellularAutomaton(self.__size, self.__steps, rule=i, begin_type=begin_type)
+                self.__ca.reset(rule=i, begin_type='fixed')
                 self.__ca.run()
                 self.__handle_image_output(show, save, debug)
-                self.__ca.reset(begin_type=begin_type)
+                # self.__ca.reset(rule=i, begin_type='fixed')
         
         elif self.__sim_type.name == 'complete':
             _, execs = self.__sim_type.info(debug=debug)
@@ -84,5 +88,19 @@ class Simulation:
                             self.__ca.run()
                             self.__handle_image_output(show, save, debug)
 
-        
-    
+        elif self.__sim_type.name == 'custom-2-2':
+            _ = self.__sim_type.info(debug=debug)
+            self.__ca = CellularAutomaton(self.__size, self.__steps, rule=0, rule2=0, begin_type='fixed')
+            for rule1 in PERIODIC.get_rules():
+                for rule2 in PERIODIC.get_rules():
+                    if rule1 == rule2:
+                        continue
+                        # # TESTE:
+                        # self.__ca.reset(rule=rule1, rule2=rule2, begin_type='fixed')
+                        # self.__ca.run()
+                        # self.__handle_image_output(show, save, debug)
+                    else:
+                        self.__ca.reset(rule=rule1, rule2=rule2, begin_type='fixed')
+                        self.__ca.run()
+                        self.__handle_image_output(show, save, debug)
+                        # continue

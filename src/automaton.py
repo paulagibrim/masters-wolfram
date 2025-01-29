@@ -174,31 +174,35 @@ class CellularAutomaton:
         Calculate the next state of the automaton for a given step.
         :param step: int, the current step in the simulation.
         """
-        for cell in range(self.__size):
+        next_state = self.__grid[step].copy()  # Cria uma cópia temporária para evitar alterações diretas
 
+        for cell in range(self.__size):
             # Set the neighbors of the cell, using boundary conditions
             left = self.__grid[step, (cell - 1) % self.__size]
             center = self.__grid[step, cell]
             right = self.__grid[step, (cell + 1) % self.__size]
 
-            # Set the neighbors as a tuple
+            # Apply the first rule
             neighbors = (left, center, right)
+            next_state[cell] = self.__rule.get_rule_dict()[neighbors]
 
-            # Apply the rule to the cell
-            self.__grid[step + 1, cell] = self.__rule.get_rule_dict()[neighbors]
+        # Copia o estado atualizado para o grid
+        self.__grid[step + 1] = next_state.copy()
 
-            # If needed, apply the composition of the rules to the cell
-            if self.__rule2 is not None:
-                # self.__grid[step + 1, cell] = self.__rule.get_rule_dict()[neighbors]
+        # Se houver uma segunda regra, aplicamos em um segundo passo, mas SEM alterar diretamente `next_state`
+        if self.__rule2 is not None:
+            temp_state = next_state.copy()
 
-                left = self.__grid[step + 1, (cell - 1) % self.__size]
-                center = self.__grid[step + 1, cell]
-                right = self.__grid[step + 1, (cell + 1) % self.__size]
+            for cell in range(self.__size):
+                left = next_state[(cell - 1) % self.__size]
+                center = next_state[cell]
+                right = next_state[(cell + 1) % self.__size]
 
-                # Set the new neighbors as a tuple
                 neighbors = (left, center, right)
+                temp_state[cell] = self.__rule2.get_rule_dict()[neighbors]
 
-                self.__grid[step + 1, cell] = self.__rule2.get_rule_dict()[neighbors]
+            # Copia o resultado final para a matriz do grid
+            self.__grid[step + 1] = temp_state.copy()
 
     def __get_grid(self):
         """
