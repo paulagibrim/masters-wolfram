@@ -90,14 +90,16 @@ class CellularAutomaton:
         self.__validate_begin_type(begin_type)
         self.__validate_zip_mode(self.__zip_mode)
 
-    def __validate_rule(self, rule):
+    @staticmethod
+    def __validate_rules(self, rule):
         """
         Validate the rule of the cellular automaton.
         """
         if rule not in rules:
             raise ValueError("\033[31m[ERROR] Invalid rule number. Must be in the range 0-255.\033[0m")
-        
-    def __validate_path(self, path):
+
+    @staticmethod
+    def __validate_path(path):
         """
         Validate the path of the image.
         """
@@ -173,26 +175,27 @@ class CellularAutomaton:
         :param step: int, the current step in the simulation.
         """
         for cell in range(self.__size):
-            # Definir os vizinhos usando condições de contorno circulares
+
+            # Set the neighbors of the cell, using boundary conditions
             left = self.__grid[step, (cell - 1) % self.__size]
             center = self.__grid[step, cell]
             right = self.__grid[step, (cell + 1) % self.__size]
 
-            # Define os vizinhos como uma tupla
+            # Set the neighbors as a tuple
             neighbors = (left, center, right)
 
-            # Aplica a regra correspondente
-            if self.__rule2 is None:
-                self.__grid[step + 1, cell] = self.__rule.get_rule_dict()[neighbors]
-            else:
-                # Aplica a composição das regras
-                self.__grid[step + 1, cell] = self.__rule.get_rule_dict()[neighbors]
+            # Apply the rule to the cell
+            self.__grid[step + 1, cell] = self.__rule.get_rule_dict()[neighbors]
+
+            # If needed, apply the composition of the rules to the cell
+            if self.__rule2 is not None:
+                # self.__grid[step + 1, cell] = self.__rule.get_rule_dict()[neighbors]
 
                 left = self.__grid[step + 1, (cell - 1) % self.__size]
                 center = self.__grid[step + 1, cell]
                 right = self.__grid[step + 1, (cell + 1) % self.__size]
 
-                # Define os novos vizinhos como uma tupla
+                # Set the new neighbors as a tuple
                 neighbors = (left, center, right)
 
                 self.__grid[step + 1, cell] = self.__rule2.get_rule_dict()[neighbors]
@@ -333,5 +336,6 @@ class CellularAutomaton:
             self.__label += self.__rule.get_label() + ' + ' + self.__rule2.get_label() + '.png'
 
         else:
+            self.__label += 'single/'
             self.__label += self.__get_class(self.__rule.get_number()).get_label() + '/'
             self.__label += self.__rule.get_label() + '.png'
