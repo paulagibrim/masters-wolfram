@@ -1,7 +1,8 @@
 import os
 from automaton import CellularAutomaton
 from simulation_type import SimulationType
-from classes import HOMOGENIOUS, PERIODIC, CHAOTIC, COMPLEX
+from utils import paint
+from classes import HOMOGENEOUS, PERIODIC, CHAOTIC, COMPLEX
 
 class Simulation:
     def __init__(self, sim_type:SimulationType, scale: int = 4, size:int = 100, steps: int = 200):
@@ -53,54 +54,56 @@ class Simulation:
         self.__validate_image_output(show, save, debug)
 
         # @FIXME: Será que o self.__ca deveria ser instanciado aqui?
+        self.__ca = CellularAutomaton(self.__size, self.__steps, rule=0, rule2=None, begin_type='fixed')
 
-        if self.__sim_type.name == 'single':
-            _, rule = self.__sim_type.info(debug=debug)
-            self.__ca = CellularAutomaton(self.__size, self.__steps, rule=rule, begin_type=begin_type)
-            self.__ca.run()
-            self.__handle_image_output(show, save, debug)
-        
-        elif self.__sim_type.name == 'all':
-            self.__ca = CellularAutomaton(self.__size, self.__steps, rule=0, begin_type=begin_type)
-            _ = self.__sim_type.info(debug=debug)
-            for i in range(256):
-                self.__ca.reset(rule=i, begin_type='fixed')
+        # Write some debug information on the console
+        self.__sim_type.info(debug=debug)
+
+        # Get the number of executions
+        execs = self.__sim_type.get_execs()
+
+        for exec in range(execs):
+            if self.__sim_type.name == 'single':
+                # Get the rule to be simulated
+                rule = self.__sim_type.get_rule()
+
+                # Run the simulation
+                self.__ca.reset(rule=rule, rule2=None, begin_type=begin_type)
                 self.__ca.run()
                 self.__handle_image_output(show, save, debug)
-                # self.__ca.reset(rule=i, begin_type='fixed')
-        
-        elif self.__sim_type.name == 'complete':
-            _, execs = self.__sim_type.info(debug=debug)
-            self.__ca = CellularAutomaton(self.__size, self.__steps, rule=0, rule2=0, begin_type='fixed')
-            for exec in range(execs):
+
+            elif self.__sim_type.name == 'all':
+                for i in range(256):
+                    self.__ca.reset(rule=i, begin_type='fixed')
+                    self.__ca.run()
+                    self.__handle_image_output(show, save, debug)
+
+            elif self.__sim_type.name == 'complete':
                 if debug:
-                    print('\033[32m========== DEBUG INFO ==========\033[0m')
-                    print('\033[32m[INFO] Executing simulation', exec+1, 'of', execs, '\033[0m')
-                    print('\033[32m===============================\033[0m')
+                    print(paint('yellow', '========== DEBUG INFO =========='))
+                    print(paint('yellow','[INFO] Executing simulation' + str(exec+1) + 'of' + str(execs)))
+                    print(paint('yellow','==============================='))
+
                 for i in range(256):
                     for j in range(256):
                         if i == j:
                             continue
                         else:
-                            # self.__ca = CellularAutomaton(self.__size, self.__steps, rule=i, rule2=j, index=exec, begin_type='random')
                             self.__ca.reset(rule=i, rule2=j, index=exec, begin_type='fixed')
-                            # print(self.__ca.get_initial_state())
                             self.__ca.run()
                             self.__handle_image_output(show, save, debug)
 
-        elif self.__sim_type.name == 'custom-2-2':
-            _ = self.__sim_type.info(debug=debug)
-            self.__ca = CellularAutomaton(self.__size, self.__steps, rule=0, rule2=0, begin_type='fixed')
-            for rule1 in PERIODIC.get_rules():
-                for rule2 in PERIODIC.get_rules():
-                    if rule1 == rule2:
-                        continue
-                        # # TESTE:
-                        # self.__ca.reset(rule=rule1, rule2=rule2, begin_type='fixed')
-                        # self.__ca.run()
-                        # self.__handle_image_output(show, save, debug)
-                    else:
-                        self.__ca.reset(rule=rule1, rule2=rule2, begin_type='fixed')
-                        self.__ca.run()
-                        self.__handle_image_output(show, save, debug)
-                        # continue
+            elif self.__sim_type.name[:7] == 'custom-' and self.__sim_type.name[8] == '-':
+                c1, c2 = self.__sim_type.get_chosen_classes()
+                for rule1 in c1.get_rules():
+                    for rule2 in c2.get_rules():
+                        if rule1 == rule2:
+                            continue
+                        else:
+                            self.__ca.reset(rule=rule1, rule2=rule2, begin_type='fixed', index=exec)
+                            self.__ca.run()
+                            self.__handle_image_output(show, save, debug)
+
+
+    # DEBUG METHODS
+    # def debug_simulations

@@ -31,3 +31,31 @@ def custom_print(text: str, color:str='white'):
 
     else:
         raise ValueError("Invalid color. Please use one of the following options: 'white', 'red', 'green', 'yellow', 'blue', 'purple', 'cyan', 'gray'.")
+
+def paint(color, text):
+    if color == 'white':
+        return text
+
+    elif color == 'red':
+        return f"\033[31m{text}\033[0m"
+
+    elif color == 'green':
+        return f"\033[32m{text}\033[0m"
+
+    elif color == 'yellow':
+        return f"\033[33m{text}\033[0m"
+
+    elif color == 'blue':
+        return f"\033[34m{text}\033[0m"
+
+    elif color == 'purple':
+        return f"\033[35m{text}\033[0m"
+
+    elif color == 'cyan':
+        return f"\033[36m{text}\033[0m"
+
+    elif color == 'gray':
+        return f"\033[37m{text}\033[0m"
+
+    else:
+        raise ValueError("Invalid color. Please use one of the following options: 'white', 'red', 'green', 'yellow', 'blue', 'purple', 'cyan', 'gray'.")

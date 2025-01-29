@@ -1,5 +1,5 @@
 from rules import rules
-from classes import HOMOGENIOUS, PERIODIC, CHAOTIC, COMPLEX
+from classes import HOMOGENEOUS, PERIODIC, CHAOTIC, COMPLEX
 from PIL import Image
 
 import numpy as np
@@ -119,8 +119,8 @@ class CellularAutomaton:
         """
         Validate the class of the cellular automaton.
         """
-        if rule in HOMOGENIOUS.get_rules():
-            return HOMOGENIOUS
+        if rule in HOMOGENEOUS.get_rules():
+            return HOMOGENEOUS
         elif rule in PERIODIC.get_rules():
             return PERIODIC
         elif rule in CHAOTIC.get_rules():
@@ -324,8 +324,12 @@ class CellularAutomaton:
 
         self.__label = '../results/'
 
-        if self.__index is not None and self.__index >= 0:
-            self.__label += 'exec' + str(self.__index) + '/'
+        # Number of previous executions
+        last_execs = sum(1 for item in os.listdir('../results') if (os.path.isdir(os.path.join('../results', item) and 'exec' in item)))
+
+        # print (last_execs)
+        if self.__index is not None and self.__index > 0:
+            self.__label += 'exec' + str(self.__index + last_execs) + '/'
 
         # @TODO: Colocar essas criações de nomes em um método separado
         if self.__rule2 is not None:

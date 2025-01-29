@@ -1,7 +1,7 @@
 class Class:
-    def __init__(self, id, label):
+    def __init__(self, id):
         self.__id = id
-        self.__label = label
+        self.__label = self.__set_labels()
         self.__rules = []
 
         self.__set_rules()
@@ -60,9 +60,19 @@ class Class:
             elif self.__id == 4:
                 self.__rules = [41, 54, 97, 106, 107, 110, 120, 121, 124, 137, 147, 169, 193, 225]
 
+    def __set_labels(self):
+        self.validate_id()
+        if self.__id == 1:
+            return 'I_Homogeneous'
+        elif self.__id == 2:
+            return 'II_Periodic'
+        elif self.__id == 3:
+            return 'III_Chaotic'
+        elif self.__id == 4:
+            return 'IV_Complex'
 
-HOMOGENIOUS = Class(1, 'I_Homogenious')
-PERIODIC = Class(2, 'II_Periodic')
-CHAOTIC = Class(3, 'III_Chaotic')
-COMPLEX = Class(4, 'IV_Complex')
+HOMOGENEOUS = Class(1)
+PERIODIC = Class(2)
+CHAOTIC = Class(3)
+COMPLEX = Class(4)
 
