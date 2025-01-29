@@ -27,6 +27,7 @@ class CellularAutomaton:
         self.__begin_type = None
         self.__label = ''
         self.__index = index
+        self.__previous_execs = None
 
         ## RULE INITIALIZATION ##
         self.__set_rules(rule, rule2)
@@ -76,7 +77,7 @@ class CellularAutomaton:
 
     def __validate_begin_type(self, begin_type):
         """
-        Validate the begin type.
+        Validate the beginning type.
         """
         if begin_type not in ['random', 'center', 'fixed']:
             raise ValueError("\033[31m[ERROR] Invalid begin_type. Use 'random', 'center' or 'fixed'.\033[0m")
@@ -91,7 +92,7 @@ class CellularAutomaton:
         self.__validate_zip_mode(self.__zip_mode)
 
     @staticmethod
-    def __validate_rules(self, rule):
+    def __validate_rules(rule):
         """
         Validate the rule of the cellular automaton.
         """
@@ -222,6 +223,12 @@ class CellularAutomaton:
         Return the initial state of the grid.
         """
         return self.__grid[0]
+
+    def set_initial_state(self, initial_state):
+        """
+        Set the initial state of the grid.
+        """
+        self.__set_initial_state(initial_state, self.__grid)
     
 
     ### INITIALIZATION METHODS ###
@@ -237,6 +244,7 @@ class CellularAutomaton:
         elif self.__begin_type == 'center':
             init = np.zeros(self.__size, dtype=bool)
             init[self.__size//2] = 1
+            # init[self.__size // 2] = !init[self.__size // 2]
             grid[0] = self.__set_initial_state(init, grid)
 
         return grid
@@ -325,11 +333,14 @@ class CellularAutomaton:
         self.__label = '../results/'
 
         # Number of previous executions
-        last_execs = sum(1 for item in os.listdir('../results') if (os.path.isdir(os.path.join('../results', item) and 'exec' in item)))
+        # if self.__index == 0:
+        #     last_execs = sum(
+        #         1 for item in os.listdir('../results')
+        #         if os.path.isdir(os.path.join('../results', item)) and 'exec' in item
+        #     )
 
-        # print (last_execs)
-        if self.__index is not None and self.__index > 0:
-            self.__label += 'exec' + str(self.__index + last_execs) + '/'
+        if self.__index is not None and self.__index >= 0 and self.__previous_execs is not None:
+            self.__label += 'exec_' + str((self.__index + self.__previous_execs)) + '/'
 
         # @TODO: Colocar essas criações de nomes em um método separado
         if self.__rule2 is not None:
@@ -347,3 +358,14 @@ class CellularAutomaton:
             self.__label += 'single/'
             self.__label += self.__get_class(self.__rule.get_number()).get_label() + '/'
             self.__label += self.__rule.get_label() + '.png'
+
+
+    def calculate_previous_execs(self):
+        """
+        Calculate the number of previous executions.
+        """
+
+        self.__previous_execs = sum(
+            1 for item in os.listdir('../results')
+            if os.path.isdir(os.path.join('../results', item)) and 'exec' in item
+        )

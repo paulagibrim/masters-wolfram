@@ -53,8 +53,8 @@ class Simulation:
         """Run the simulation"""
         self.__validate_image_output(show, save, debug)
 
-        # @FIXME: Será que o self.__ca deveria ser instanciado aqui?
         self.__ca = CellularAutomaton(self.__size, self.__steps, rule=0, rule2=None, begin_type='fixed')
+        self.__ca.calculate_previous_execs()
 
         # Write some debug information on the console
         self.__sim_type.info(debug=debug)
@@ -63,6 +63,11 @@ class Simulation:
         execs = self.__sim_type.get_execs()
 
         for exec in range(execs):
+            if debug:
+                print(paint('yellow', '========== DEBUG INFO =========='))
+                print(paint('yellow', '[INFO] Executing simulation' + str(exec + 1) + ' of ' + str(execs)))
+                print(paint('yellow', '==============================='))
+
             if self.__sim_type.name == 'single':
                 # Get the rule to be simulated
                 rule = self.__sim_type.get_rule()
@@ -79,11 +84,6 @@ class Simulation:
                     self.__handle_image_output(show, save, debug)
 
             elif self.__sim_type.name == 'complete':
-                if debug:
-                    print(paint('yellow', '========== DEBUG INFO =========='))
-                    print(paint('yellow','[INFO] Executing simulation' + str(exec+1) + 'of' + str(execs)))
-                    print(paint('yellow','==============================='))
-
                 for i in range(256):
                     for j in range(256):
                         if i == j:

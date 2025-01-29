@@ -22,9 +22,10 @@ class SimulationType:
         name = name.lower()
 
         # @FIXME: ARRUMAR O TIPO CUSTOM-M-N
-        if name not in ['single', 'all', 'complete', 'custom-1-1', 'custom-2-2', 'custom-3-3', 'custom-4-4' ]: #, 'custom']:
+        # print(name)
+        if name not in ['single', 'all', 'complete'] and name[:7] != 'custom-':
             raise ValueError(
-                "\033[31m[ERROR] Invalid 'type' specified.\033[0m\n\n"
+                paint('red','[ERROR] Invalid \'type\' specified.\n'),
                 "Please use one of the following options:\n"
                 "- 'single': Run the simulation for a specified rule. \n"
                 "- 'all': Run the simulation for all Wolfram Rules.\n"
