@@ -4,9 +4,9 @@
 ## Funções necessárias
 - [x] Aplicar a regra
 - [x] Transformar um estado final em imagem
-- [ ] Gerar imagem para todas as regras
-- [ ] Aplicar a composição das regras (uma e a outra, depois print)
-- [ ] Gerar imagem para todas as composições
+- [x] Gerar imagem para todas as regras
+- [x] Aplicar a composição das regras (uma e a outra, depois print)
+- [x] Gerar imagem para todas as composições
 
 ## Prioridade Alta
 - [ ] Arquivo de regras (funções)
@@ -18,7 +18,6 @@
 
 ## Prioridade Média
 - [ ] Criar documentação para a API de geração de imagens.
-- [ ] Otimizar a lógica de evolução do automaton para trabalhar com Numpy puro.
 
 ## Melhorias Futuras
 - [ ] Adicionar suporte para visualização em tempo real (matplotlib).

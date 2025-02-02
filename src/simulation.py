@@ -31,7 +31,7 @@ class Simulation:
         """Validate the show and save parameters"""
         if not isinstance(show, bool) or not isinstance(save, bool) or not isinstance(debug, bool):
             raise ValueError(
-                "\033[31m[ERROR] Invalid 'show', 'save' or 'debug' parameter specified.\033[0m\n\n"
+                paint('red', '[ERROR] Invalid parameters specified.\n'),
                 "Please use a boolean value for these parameters."
             )
 
@@ -42,11 +42,11 @@ class Simulation:
         if show:
             self.__ca.show_image(scale=self.__scale)
             if debug:
-                print('\033[32m[INFO] Image opened:', os.path.basename(self.__ca.get_label()),'\033[0m')
+                print(paint('yellow', '[INFO] Image opened:' + os.path.basename(self.__ca.get_label())))
         if save:
             self.__ca.save_image(scale=self.__scale)
             if debug:
-                print('\033[32m[INFO] Image saved:', self.__ca.get_label(),'\033[0m')
+                print(paint('yellow', '[INFO] Image saved:' + self.__ca.get_label()))
 
 
     def run(self, show: bool = False, save: bool = True, debug: bool = False, begin_type: str = 'random'):

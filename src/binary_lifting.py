@@ -20,7 +20,7 @@ class BinaryLifting:
 
 
     def __set_possible_values(self):
-        # Gerar todas as combinações possíveis de uma linha de tamanho `size`
+        # Gerar todas as combinações possíveis de uma linha de tamanho 'size'
         return [tuple(map(int, f"{i:0{self.__size}b}")) for i in range(2 ** self.__size)]
 
     def __generate_mapping_possible_values(self):

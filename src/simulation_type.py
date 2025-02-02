@@ -1,4 +1,4 @@
-from classes import HOMOGENEOUS, PERIODIC, CHAOTIC, COMPLEX, Class
+from classes import Class
 from utils import paint
 
 class SimulationType:

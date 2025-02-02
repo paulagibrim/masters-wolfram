@@ -7,9 +7,9 @@ class Rule:
     @staticmethod
     def __set_rule_dict(rule_number):
         """
-        Generate the dictionary for a given rule number in Wolfram's 1D automata.
-        :param rule_number: Integer (0-255), the rule ID.
-        :return: dict, mapping of neighbor states to next state.
+            Generate the dictionary for a given rule number in Wolfram's 1D automata.
+            :param rule_number: Integer (0-255), the rule ID.
+            :return: dict, mapping of neighbor states to next state.
         """
         # Convert the rule number to an 8-bit binary representation
         binary_representation = f"{rule_number:08b}"

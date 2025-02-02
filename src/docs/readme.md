@@ -25,9 +25,9 @@ def __init__(self, size, steps, rule, rule2=None, begin_type='random', zip_mode=
 - `size` (int): Número de células na grade.
 - `steps` (int): Número de passos (temporal) a serem simulados.
 - `rule` (function): Mapeia o estado atual de uma célula e seus vizinhos para o próximo estado.
-- `rule2` (function, opcional): Segunda regra para alternância (usada no modo zip). Default: `None`.
-- `begin_type` (str, opcional): Define o estado inicial ('random' ou 'center'). Default: `random`.
-- `zip_mode` (bool, opcional): Alterna entre duas regras a cada passo, caso ativado. Default: `False`.
+- `rule2` (function, opcional): Segunda regra para alternância (usada no modo zip). Padrão: `None`.
+- `begin_type` (str, opcional): Define o estado inicial ('random' ou 'center'). Padrão: `random`.
+- `zip_mode` (bool, opcional): Alterna entre duas regras a cada passo, caso ativado. Padrão: `False`.
 
 
 **Métodos:**

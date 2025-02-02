@@ -137,20 +137,7 @@ class CellularAutomaton:
 
     @staticmethod
     def __generate_rule_dict(rule_number):
-        """
-        Generate the dictionary for a given rule number in Wolfram's 1D automata.
-        :param rule_number: int, the rule ID (0-255).
-        :return: dict, mapping of neighbor states to next state.
-        """
-        binary_representation = f"{rule_number:08b}"
-        combinations = [
-            (0, 0, 0), (0, 0, 1), (0, 1, 0), (0, 1, 1),
-            (1, 0, 0), (1, 0, 1), (1, 1, 0), (1, 1, 1),
-        ]
-        return {
-            combo: int(binary_representation[7 - i])
-            for i, combo in enumerate(combinations)
-        }
+        return rules[rule_number].get_rule_dict()
     
     def __get_rule_obj(self, rule):
         """
@@ -191,7 +178,7 @@ class CellularAutomaton:
         # Copia o estado atualizado para o grid
         self.__grid[step + 1] = next_state.copy()
 
-        # Se houver uma segunda regra, aplicamos em um segundo passo, mas SEM alterar diretamente `next_state`
+        # Se houver uma segunda regra, aplicamos em um segundo passo, mas SEM alterar diretamente 'next_state'
         if self.__rule2 is not None:
             temp_state = next_state.copy()
 

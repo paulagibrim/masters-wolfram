@@ -14,7 +14,7 @@ class Class:
         if isinstance(self.__id, str):
             if self.__id not in valid_ids:
                 raise ValueError("Invalid ID. Must be 'I', 'II', 'III', or 'IV'.")
-            self.__id = valid_ids[self.__id]  # Converte string para inteiro.
+            self.__id = valid_ids[self.__id]  # Converte 'string' para inteiro.
 
         if isinstance(self.__id, int):
             if self.__id not in valid_ids.values():
