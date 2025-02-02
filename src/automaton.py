@@ -7,7 +7,7 @@ import numpy as np
 import os
 
 class CellularAutomaton:
-    def __init__(self, size: int, steps: int, rule: int, rule2: int=None, begin_type: str='random', zip_mode: bool=False, index:int=None):
+    def __init__(self, size: int, steps: int, rule: int, rule2: int=None, begin_type: str='random', index:int=None):
         """
         Constructor for the CellularAutomaton class.
 
@@ -16,7 +16,7 @@ class CellularAutomaton:
         :param rule: int, maps the current state of the cell and its neighbors to the next state.
         :param rule2: int (optional), a second rule for alternation (zip mode).
         :param begin_type: str, initial state of the cells, 'random' or 'center'.
-        :param zip_mode: bool, whether to alternate between two rules at each step.
+        # :param zip_mode: bool, whether to alternate between two rules at each step.
         """
 
         self.__size = size
@@ -43,7 +43,6 @@ class CellularAutomaton:
         
         ## GRID INITIALIZATION ##
         self.__grid = self.__initialize_grid()
-
 
 
     #### VALIDATION METHODS ####
@@ -133,6 +132,7 @@ class CellularAutomaton:
         else:
             # raise Warning("[!] Rule: {} does not match any class.".format(rule))
             raise ValueError('\033[31m[ERROR] Rule:', rule ,'does not match any class. Something went wrong.' + '\033[0m')
+
 
     #### RULE GENERATION METHODS ####
 
@@ -248,7 +248,6 @@ class CellularAutomaton:
         # print (grid[0])
         return grid
 
-
     def reset(self, begin_type:str ='fixed', rule: int=None, rule2: int=None, zip_mode: bool=False, index:int=None):
         if rule is None:
             raise ValueError("[ERROR] Rule must be specified.") # @FIXME: Colocar COR
@@ -272,6 +271,7 @@ class CellularAutomaton:
         # else:
         #     raise ValueError("Invalid begin type. Use 'random', 'center' or 'fixed'.")
         self.__grid[1:] = 0
+
 
     ### IMAGE GENERATION METHODS ###
 
