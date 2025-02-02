@@ -28,6 +28,7 @@ class CellularAutomaton:
         self.__label = ''
         self.__index = index
         self.__previous_execs = None
+        self.__validate_path('../results/')
         self.calculate_previous_execs()
 
         ## RULE INITIALIZATION ##
