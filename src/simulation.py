@@ -1,6 +1,7 @@
 import os
 from automaton import CellularAutomaton
 from simulation_type import SimulationType
+from src.composed_ac import ComposedAC
 from utils import paint
 from classes import HOMOGENEOUS, PERIODIC, CHAOTIC, COMPLEX
 
@@ -53,7 +54,7 @@ class Simulation:
         """Run the simulation"""
         self.__validate_image_output(show, save, debug)
 
-        self.__ca = CellularAutomaton(self.__size, self.__steps, rule=0, rule2=None, begin_type='fixed')
+        self.__ca = CellularAutomaton(self.__size, self.__steps, rule=0, begin_type='fixed')
         # self.__ca.calculate_previous_execs()
 
         # Write some debug information on the console
@@ -87,6 +88,7 @@ class Simulation:
                     self.__handle_image_output(show, save, debug)
 
             elif self.__sim_type.name == 'complete':
+                self.__ca = ComposedAC(self.__size, self.__steps, rule=0, rule2=0, begin_type='fixed')
                 for i in range(256):
                     for j in range(256):
                         if i == j:
@@ -98,6 +100,7 @@ class Simulation:
 
             elif self.__sim_type.name[:7] == 'custom-' and self.__sim_type.name[8] == '-':
                 c1, c2 = self.__sim_type.get_chosen_classes()
+                self.__ca = ComposedAC(self.__size, self.__steps, rule=0, rule2=0, begin_type='fixed')
                 for rule1 in c1.get_rules():
                     for rule2 in c2.get_rules():
                         if rule1 == rule2:
